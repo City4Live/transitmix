@@ -95,31 +95,34 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyDtWJ1SNDv5ihQnErxLwbgiHyflWaUvX34';
+  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(city) + '.json?proximity=ip&access_token=pk.eyJ1IjoiZ2hld2l0dCIsImEiOiJjbGJkOHV0NDcwMjlvNDFtejVjZzZrbzNvIn0.66yJSxG8vmOwX2UpQd4Pag';
+  // var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyBDKtwlYYDChsxLDsbAeL73NPfhQD1Gnck';
  
   $.getJSON(url, function(response) {
-    if (response.error || response.results.length === 0) {
+    if (response.error || response.features.length === 0) {
       console.log('Unable to geocode city. Womp Womp.', response.error);
     }
  
     // Get the coordinates for the center of the city
-    var location = response.results[0].geometry.location;
-    var latlng = [location.lat, location.lng];
- 
+    // var location = response.results[0].geometry.location;
+    // var latlng = [location.lat, location.lng];
+    var location = response.features[0].geometry.coordinates;
+    var latlng = [location[1], location[0]];
+
     // Get the city's name. In google maps this is called 'locality'
     var name = city;
     var preferMetric = true;
-    var components = response.results[0].address_components;
-    for (var i = 0; i < components.length; i++) {
-      var component = components[i];
-      if (_.contains(component.types, 'locality')) {
-        name = component.long_name;
-      }
+    // var components = response.results[0].address_components;
+    // for (var i = 0; i < components.length; i++) {
+    //   var component = components[i];
+    //   if (_.contains(component.types, 'locality')) {
+    //     name = component.long_name;
+    //   }
 
-      if (component.long_name === 'United States' || component.long_name === 'United Kingdom') {
-        preferMetric = false;
-      }
-    }
+    //   if (component.long_name === 'United States' || component.long_name === 'United Kingdom') {
+    //     preferMetric = false;
+    //   }
+    // }
  
     callback.call(context || this, latlng, name, preferMetric);
   });

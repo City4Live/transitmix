@@ -1,0 +1,23 @@
+services:
+  postgres:
+    image: postgres:15.3-alpine
+    environment:
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_DB: transitmix
+    volumes:
+      - ./data:/var/lib/postgresql/data
+
+  app:
+    image: ruby:2.7.1
+    build:
+      context: .
+    depends_on:
+      - postgres
+    entrypoint: ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "3000"]
+    environment:
+      DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/transitmix"
+    ports:
+      - 3000:3000
+    volumes:
+      - ./:/app

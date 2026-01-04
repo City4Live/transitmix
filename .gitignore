@@ -43,3 +43,5 @@ build/
 
 # sass temporary files
 .sass-cache/
+
+data/

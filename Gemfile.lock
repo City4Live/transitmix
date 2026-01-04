@@ -29,11 +29,13 @@ GEM
     diff-lcs (1.4.4)
     dotenv (2.7.6)
     equalizer (0.0.11)
+    eventmachine (1.2.7)
     eventmachine (1.2.7-x64-mingw32)
     execjs (2.7.0)
     factory_girl (4.9.0)
       activesupport (>= 3.0.0)
     ffaker (2.16.0)
+    ffi (1.13.1)
     ffi (1.13.1-x64-mingw32)
     georuby (2.5.2)
     grape (0.9.0)
@@ -63,8 +65,11 @@ GEM
     multi_json (1.15.0)
     multi_xml (0.6.0)
     newrelic_rpm (6.12.0.367)
+    nokogiri (1.10.10)
+      mini_portile2 (~> 2.4.0)
     nokogiri (1.10.10-x64-mingw32)
       mini_portile2 (~> 2.4.0)
+    pg (1.2.3)
     pg (1.2.3-x64-mingw32)
     phantomjs (2.1.1.0)
     rack (1.6.13)
@@ -127,6 +132,7 @@ GEM
     zeitwerk (2.4.0)
 
 PLATFORMS
+  ruby
   x64-mingw32
 
 DEPENDENCIES
