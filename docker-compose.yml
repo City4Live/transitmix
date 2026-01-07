@@ -7,17 +7,23 @@ services:
       POSTGRES_DB: transitmix
     volumes:
       - ./data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DATABASE_USER}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   app:
-    image: ruby:2.7.1
+    image: ruby:3.2.2
     build:
       context: .
     depends_on:
-      - postgres
-    entrypoint: ["bundle", "exec", "rackup", "--host", "0.0.0.0", "-p", "3000"]
+      postgres:
+        condition: service_healthy
     environment:
       DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/transitmix"
+      PORT: ${PORT:-3000}
     ports:
-      - 3000:3000
+      - "${PORT:-3000}:${PORT:-3000}"
     volumes:
       - ./:/app

@@ -25,7 +25,8 @@ module Sinatra
       app.set :assets, assets
 
       # declare asset engines
-      assets.css_compressor = :scss
+      require 'sassc'
+      assets.css_compressor = :sassc
       app.configure :production do
         assets.js_compressor  = :uglify
       end

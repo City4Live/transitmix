@@ -1,4 +1,4 @@
-FROM ruby:2.7.1
+FROM ruby:3.2.2
 
 ENV NODE_VERSION=18.16.0
 ENV ARCH=x64
@@ -11,4 +11,6 @@ WORKDIR /app
 
 COPY . /app
 
-RUN bundle install
+RUN bundle install && chmod +x entrypoint.sh
+
+ENTRYPOINT ["./entrypoint.sh"]
