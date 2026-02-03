@@ -45,3 +45,11 @@ build/
 .sass-cache/
 
 data/
+
+node_modules/
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+cypress/downloads/
+.cypress/

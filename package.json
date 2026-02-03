@@ -1,0 +1,31 @@
+{
+  "name": "transitmix2",
+  "version": "1.0.0",
+  "description": "[Transitmix](http://transitmix.net/) is a sketching tool for transit planners. The tool makes it easy to draw new transit lines, understand the underlying costs, and share ideas with the public. So far, Transitmix been used to generate 30,000 new transit maps for more than 3,600 cities across the world, all powered by open data and data standards ([OpenStreetMap](http://openstreetmap.org), [Open Source Routing Machine](http://project-osrm.org), and the [Google Transit Feed Specification](http://www.gtfs-data-exchange.com/).",
+  "main": "index.js",
+  "directories": {
+    "lib": "lib"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
+    "test:e2e": "cypress run",
+    "test:e2e:headed": "cypress run --headed"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/City4Live/transitmix.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/City4Live/transitmix/issues"
+  },
+  "homepage": "https://github.com/City4Live/transitmix#readme",
+  "devDependencies": {
+    "cypress": "^15.8.2"
+  }
+}
