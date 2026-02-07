@@ -14,10 +14,8 @@ app.utils.getRoute = function(options, callback, context) {
     return;
   }
 
-  // Preferentially rely on mapzen's OSRM server. If it's failed,
-  // switch to Mapbox Smart Directions.
-  var routingEngine = app.utils._mapboxRouting;
-//  if (!app.utils._mapzenEndpointWorking) routingEngine = app.utils._mapboxRouting;
+  // Use OSRM as the primary routing service
+  var routingEngine = app.utils._osrmRouting;
   routingEngine(waypoints, callback, context);
 };
 
@@ -64,6 +62,31 @@ app.utils._mapboxRouting = function(waypoints, callback, context) {
   });
 };
 
+// OSRM routing function
+app.utils._osrmRouting = function(waypoints, callback, context) {
+  // OSRM expects lon,lat format
+  var coordinates = waypoints.map(function(wp) {
+    return wp[1] + ',' + wp[0];
+  }).join(';');
+
+  var url = 'https://router.project-osrm.org/route/v1/driving/' + coordinates +
+            '?overview=full&geometries=polyline';
+
+  $.getJSON(url, function(response) {
+    if (response.code === 'Ok' && response.routes && response.routes.length > 0) {
+      var geometry = response.routes[0].geometry;
+      var coordinates = app.utils.decodeGeometry(geometry);
+      callback.call(context || this, coordinates);
+    } else {
+      console.log('OSRM routing failed, using direct line');
+      callback.call(context || this, waypoints);
+    }
+  }).fail(function() {
+    console.log('OSRM request failed, using direct line');
+    callback.call(context || this, waypoints);
+  });
+};
+
 // Takes an encoded geometry and returns a set of latlngs
 app.utils.decodeGeometry = function(encoded, precision) {
   precision = precision || 6;
@@ -95,7 +118,8 @@ app.utils.decodeGeometry = function(encoded, precision) {
 // Geocode a city into a latlng and a more formalized city name 
 // using the  Google Maps geocoding API.
 app.utils.geocode = function(city, callback, context) {
-  var url = 'https://api.mapbox.com/geocoding/v5/mapbox.places/' + encodeURIComponent(city) + '.json?proximity=ip&access_token=pk.eyJ1IjoiZ2hld2l0dCIsImEiOiJjbGJkOHV0NDcwMjlvNDFtejVjZzZrbzNvIn0.66yJSxG8vmOwX2UpQd4Pag';
+  var key = 'P284q8XPHrARfH62SV0k';
+  var url = 'https://api.maptiler.com/geocoding/' + encodeURIComponent(city) + '.json?key=' + key;
   // var url = 'https://maps.googleapis.com/maps/api/geocode/json?address=' + encodeURIComponent(city) + '&key=AIzaSyBDKtwlYYDChsxLDsbAeL73NPfhQD1Gnck';
  
   $.getJSON(url, function(response) {
@@ -125,6 +149,9 @@ app.utils.geocode = function(city, callback, context) {
     // }
  
     callback.call(context || this, latlng, name, preferMetric);
+  }).fail(function() {
+    console.log('Geocoding failed, using default location');
+    callback.call(context || this, [40, -74.50], city, true);
   });
 };
 

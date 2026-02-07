@@ -16,10 +16,23 @@ app.AppController = app.Controller.extend({
       infoControl: false,
       boxZoom: false,
     };
-    L.mapbox.accessToken = 'pk.eyJ1IjoiZ2hld2l0dCIsImEiOiJjbGJkOHV0NDcwMjlvNDFtejVjZzZrbzNvIn0.66yJSxG8vmOwX2UpQd4Pag';
-    app.leaflet = L.mapbox.map('map')
-      .setView([40, -74.50], 9)
-      .addLayer(L.mapbox.styleLayer('mapbox://styles/mapbox/outdoors-v11'));
+
+    // Initialize Leaflet map with MapTiler
+    // Using proper bounds and zoom settings for MapLibre GL Leaflet compatibility
+    app.leaflet = L.map('map', {
+      maxBounds: [[180, -Infinity], [-180, Infinity]],
+      maxBoundsViscosity: 1,
+      minZoom: 1
+    }).setView([40, -74.50], 9);
+
+    // Add MapTiler layer using MapLibre GL
+    var key = 'P284q8XPHrARfH62SV0k';
+    const schemeLayer = L.maplibreGL({
+      maxNativeZoom: 19,
+      maxZoom: 21,
+      attribution: "\u003ca href=\"https://www.maptiler.com/copyright/\" target=\"_blank\"\u003e\u0026copy; MapTiler\u003c/a\u003e \u003ca href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\"\u003e\u0026copy; OpenStreetMap contributors\u003c/a\u003e",
+      style: `https://api.maptiler.com/maps/d35bccfc-5151-4344-9640-158d158f2e42/style.json?key=${key}`,
+    }).addTo(app.leaflet);
 
     this.feedbackView = new app.FeedbackView();
     $('body').append(this.feedbackView.render().el);

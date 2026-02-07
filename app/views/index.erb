@@ -17,8 +17,12 @@
   <script src="http://use.typekit.net/xkd8pzb.js"></script>
   <script>try{Typekit.load();}catch(e){}</script>
 
-  <!-- mapbox css -->
-  <link href='https://api.mapbox.com/mapbox.js/v2.3.0/mapbox.css' rel='stylesheet' />
+  <!-- Leaflet CSS (updated to recommended version) -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.8.0/dist/leaflet.css" />
+  <!-- MapLibre GL CSS (updated to recommended version) -->
+  <link href='https://unpkg.com/maplibre-gl@2.2.1/dist/maplibre-gl.css' rel='stylesheet' />
+  <!-- MapLibre GL Leaflet adapter CSS (updated to recommended version) -->
+  <link href='https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.20/dist/maplibre-gl-leaflet.css' rel='stylesheet' />
 
   <!-- our fresh styles -->
   <link rel="stylesheet" type="text/css" href="<%= asset_path 'application.css' %>">
@@ -26,8 +30,7 @@
 <body>
   <p class="description">A sketching tool for transit planners. Transitmix makes it easy to draw new transit lines, understand the underlying costs, and share ideas with the public. Start designing your perfect transit map today!</p>
   <div id="map">
-    <a href="https://mapzen.com/" class="mapzen-maplogo" target="_blank">Mapzen</a>
-    <a href="http://mapbox.com/about/maps" class="mapbox-maplogo" target="_blank">Mapbox</a>
+    <!-- Map attribution will be handled by Leaflet's built-in attribution control -->
   </div>
 
   <!-- underscore templates -->
@@ -229,12 +232,102 @@
   <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
   <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.stickit/0.7.0/backbone.stickit.min.js"></script>
-  <script src='//api.mapbox.com/mapbox.js/v2.3.0/mapbox.js'></script>
+  <!-- Leaflet JS (updated to recommended version) -->
+  <script src="https://unpkg.com/leaflet@1.8.0/dist/leaflet.js"></script>
+  <!-- MapLibre GL JS (updated to recommended version) -->
+  <script src='https://unpkg.com/maplibre-gl@2.2.1/dist/maplibre-gl.js'></script>
+  <!-- MapLibre GL Leaflet adapter (updated to recommended version) -->
+  <script src='https://unpkg.com/@maplibre/maplibre-gl-leaflet@0.0.20/leaflet-maplibre-gl.js'></script>
+  <!-- Mapbox compatibility shim for existing code -->
+  <script>
+  window.L.mapbox = {
+    accessToken: null,
+    map: function(id) { return L.map(id); },
+    styleLayer: function(styleUrl) { return {}; }
+  };
+
+  // L.multiPolyline compatibility implementation
+  // This replaces the Mapbox.js multiPolyline function with a Leaflet-compatible version
+  L.multiPolyline = function(latlngs, options) {
+    // Handle empty object or falsy values - create empty feature group
+    if (!latlngs || typeof latlngs !== 'object' || latlngs.length === 0) {
+      var featureGroup = L.featureGroup();
+
+      // Add setLatLngs method for later use
+      featureGroup.setLatLngs = function(newLatLngs) {
+        featureGroup.clearLayers();
+
+        if (newLatLngs && newLatLngs.length > 0) {
+          // Check if it's a multi-segment array (array of arrays)
+          if (Array.isArray(newLatLngs[0]) && Array.isArray(newLatLngs[0][0])) {
+            // Multi-segment case
+            for (var i = 0; i < newLatLngs.length; i++) {
+              if (newLatLngs[i] && newLatLngs[i].length > 0) {
+                L.polyline(newLatLngs[i], options).addTo(featureGroup);
+              }
+            }
+          } else {
+            // Single segment case
+            L.polyline(newLatLngs, options).addTo(featureGroup);
+          }
+        }
+
+        return featureGroup;
+      };
+
+      return featureGroup;
+    }
+
+    // Check if it's a multi-segment array (array of coordinate arrays)
+    if (Array.isArray(latlngs[0]) && Array.isArray(latlngs[0][0])) {
+      // Multi-segment case: create feature group with multiple polylines
+      var featureGroup = L.featureGroup();
+      var polylines = [];
+
+      for (var i = 0; i < latlngs.length; i++) {
+        var segment = latlngs[i];
+        if (segment && segment.length > 0) {
+          var polyline = L.polyline(segment, options);
+          polylines.push(polyline);
+          featureGroup.addLayer(polyline);
+        }
+      }
+
+      featureGroup.getLayers = function() {
+        return polylines;
+      };
+
+      featureGroup.setLatLngs = function(newLatLngs) {
+        featureGroup.clearLayers();
+        polylines = [];
+
+        if (newLatLngs && newLatLngs.length > 0) {
+          for (var i = 0; i < newLatLngs.length; i++) {
+            var segment = newLatLngs[i];
+            if (segment && segment.length > 0) {
+              var polyline = L.polyline(segment, options);
+              polylines.push(polyline);
+              featureGroup.addLayer(polyline);
+            }
+          }
+        }
+
+        return featureGroup;
+      };
+
+      return featureGroup;
+    } else {
+      // Single segment case: use regular polyline
+      return L.polyline(latlngs, options);
+    }
+  };
+  </script>
 
   <!-- the finest quality javascripts -->
   <script>
   window.appConfig = {
-    mapboxId: '<%= ENV['MAP_ID'] %>',
+    // Mapbox has been replaced with MapTiler/Leaflet
+    // mapboxId is no longer needed
   };
   </script>
 
