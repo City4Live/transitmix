@@ -12,6 +12,22 @@ describe Map do
       :sundays_per_year, :prefer_service_hours, :prefer_metric_units]
   end
 
+  describe 'serialization' do
+    it 'stores center as JSON and deserializes back to an array' do
+      center = [37.77, -122.45]
+      map = create(:map, center: center)
+      map.reload
+      expect(map.center).to eq center
+    end
+
+    it 'stores service_windows as JSON and deserializes back' do
+      windows = [{ 'name' => 'Peak', 'from' => '6am', 'to' => '9am', 'headway' => 10 }]
+      map = create(:map, service_windows: windows)
+      map.reload
+      expect(map.service_windows).to eq windows
+    end
+  end
+
   describe '.remix' do
     it 'creates a copy of the map and lines' do
       map = create(:map)
@@ -27,6 +43,15 @@ describe Map do
       copy = Map.first!(id: map.id).remix
 
       expect(copy.remixed_from_id).to eq map.id
+    end
+
+    it 'preserves map attributes' do
+      map = create(:map, zoom_level: 15, layover: 0.15)
+      copy = Map.first!(id: map.id).remix
+
+      expect(copy.zoom_level).to eq map.zoom_level
+      expect(copy.layover).to eq map.layover
+      expect(copy.center).to eq map.center
     end
   end
 end

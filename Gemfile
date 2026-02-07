@@ -18,9 +18,9 @@ gem 'sinatra', '~> 3.0'
 gem 'thin'
 
 group :test do
-  gem 'database_cleaner'
+  gem 'database_cleaner-sequel'
   gem 'byebug'
-  gem 'factory_girl'
+  gem 'factory_bot'
   gem 'ffaker'
   gem 'rack-test'
   gem 'rspec', '~> 3.12'

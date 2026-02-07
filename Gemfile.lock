@@ -1,12 +1,6 @@
 GEM
   remote: https://rubygems.org/
   specs:
-    activemodel (8.1.1)
-      activesupport (= 8.1.1)
-    activerecord (8.1.1)
-      activemodel (= 8.1.1)
-      activesupport (= 8.1.1)
-      timeout (>= 0.4.0)
     activesupport (8.1.1)
       base64
       bigdecimal
@@ -32,12 +26,10 @@ GEM
     connection_pool (3.0.2)
     csv (3.3.5)
     daemons (1.4.1)
-    database_cleaner (2.1.0)
-      database_cleaner-active_record (>= 2, < 3)
-    database_cleaner-active_record (2.2.2)
-      activerecord (>= 5.a)
-      database_cleaner-core (~> 2.0)
     database_cleaner-core (2.0.1)
+    database_cleaner-sequel (2.0.2)
+      database_cleaner-core (~> 2.0.0)
+      sequel
     dbf (5.1.1)
       csv
     dedent (1.0.1)
@@ -61,11 +53,9 @@ GEM
       dry-logic (~> 1.4)
       zeitwerk (~> 2.6)
     eventmachine (1.2.7)
-    execjs (2.10.0)
-    factory_girl (4.9.0)
-      activesupport (>= 3.0.0)
+    factory_bot (6.5.6)
+      activesupport (>= 6.1.0)
     ffaker (2.25.0)
-    ffi (1.17.3-x86_64-linux-gnu)
     georuby (2.5.2)
     grape (1.8.0)
       activesupport (>= 5)
@@ -126,8 +116,6 @@ GEM
       builder
       nokogiri
     rubyzip (3.2.2)
-    sassc (2.4.0)
-      ffi (~> 1.9)
     securerandom (0.4.1)
     sequel (5.100.0)
       bigdecimal
@@ -136,21 +124,14 @@ GEM
       rack (~> 2.2, >= 2.2.4)
       rack-protection (= 3.2.0)
       tilt (~> 2.0)
-    sprockets (4.2.2)
-      concurrent-ruby (~> 1.0)
-      logger
-      rack (>= 2.2.4, < 4)
     thin (2.0.1)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
       logger
       rack (>= 1, < 4)
     tilt (2.6.1)
-    timeout (0.6.0)
     tzinfo (2.0.6)
       concurrent-ruby (~> 1.0)
-    uglifier (4.2.1)
-      execjs (>= 0.3.0, < 3)
     uri (1.1.1)
     webrick (1.9.2)
     zeitwerk (2.7.4)
@@ -161,11 +142,11 @@ PLATFORMS
 DEPENDENCIES
   airbrake
   byebug
-  database_cleaner
+  database_cleaner-sequel
   dbf
   dedent
   dotenv
-  factory_girl
+  factory_bot
   ffaker
   georuby
   grape (~> 1.7)
@@ -177,12 +158,9 @@ DEPENDENCIES
   rspec (~> 3.12)
   ruby_kml
   rubyzip
-  sassc (~> 2.4)
   sequel (~> 5.70)
   sinatra (~> 3.0)
-  sprockets (~> 4.1)
   thin
-  uglifier (~> 4.2)
 
 RUBY VERSION
    ruby 3.2.2p53

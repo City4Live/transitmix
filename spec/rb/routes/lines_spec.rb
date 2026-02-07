@@ -51,6 +51,28 @@ describe Transitmix::Routes::Lines do
     end
   end
 
+  describe 'PUT /api/lines/:id' do
+    let!(:line) { create(:line) }
+
+    it 'responds with 200 OK' do
+      put "/api/lines/#{line.id}", name: 'Updated Line'
+      expect(last_response.status).to eq 200
+    end
+
+    it 'updates the record' do
+      put "/api/lines/#{line.id}", name: 'Updated Line'
+      expect(Line.first!(id: line.id).name).to eq 'Updated Line'
+    end
+
+    context 'not found' do
+      it 'responds with 404 NOT FOUND' do
+        max = Line.max(:id) || 0
+        put "/api/lines/#{max + 1}", name: 'Updated Line'
+        expect(last_response.status).to eq 404
+      end
+    end
+  end
+
   describe 'DELETE /api/lines' do
     let!(:line) { create(:line) }
 
