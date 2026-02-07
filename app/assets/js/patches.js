@@ -3,7 +3,12 @@
   throw new Error('Attempting to patch Leaflet ' + L.version + '. Only 0.7.2 is supported');
 }*/
 
-// Modify Draggable to ignore shift key. 
+// NOTE: This patch was originally for Leaflet 0.7.2 but we're now using Leaflet 1.8.0
+// The patch has been disabled to prevent compatibility issues with the mousedown error.
+// If specific draggable behavior is needed, it should be implemented differently for Leaflet 1.8.0+
+
+/*
+// Modify Draggable to ignore shift key.
 L.Draggable.prototype._onDown = function(e) {
   this._moved = false;
 
@@ -25,5 +30,6 @@ L.Draggable.prototype._onDown = function(e) {
 
   L.DomEvent
       .on(document, L.Draggable.MOVE[e.type], this._onMove, this)
-      .on(document, L.Draggable.END[e.type], this._onUp, this);
+      .on(document, L.DomEvent.END[e.type], this._onUp, this);
 };
+*/
