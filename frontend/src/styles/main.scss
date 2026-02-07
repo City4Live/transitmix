@@ -1,0 +1,15 @@
+// Main SCSS entry point for Vite
+// Variables are automatically imported via vite.config.js additionalData
+
+@import 'normalize';
+@import 'base';
+@import 'views/FeedbackView';
+@import 'views/HomeView';
+@import 'views/LineDetailsView';
+@import 'views/MapDetailsView';
+@import 'views/MapDetailsItemView';
+@import 'views/MapSettingsView';
+@import 'views/LeafletEditableLineView';
+@import 'views/NotificationView';
+@import 'views/NearbyView';
+@import 'views/ServiceWindowsView';

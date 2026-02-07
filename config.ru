@@ -1,8 +1,9 @@
 require './app'
 use Rack::Deflater
 
-map '/assets' do
-  run Transitmix::App.assets
+# Serve Vite build assets in production
+map '/vite' do
+  run Rack::Files.new(File.join(File.dirname(__FILE__), 'public', 'vite'))
 end
 
 map '/' do

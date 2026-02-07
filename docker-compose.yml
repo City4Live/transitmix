@@ -22,8 +22,11 @@ services:
         condition: service_healthy
     environment:
       DATABASE_URL: "postgres://${DATABASE_USER}:${DATABASE_PASSWORD}@postgres:5432/transitmix"
-      PORT: ${PORT:-3000}
+      PORT: ${PORT:-8080}
+      # Set RACK_ENV=production to use Vite build assets
+      # In dev mode (default), run `npm run dev` separately for HMR
+      RACK_ENV: ${RACK_ENV:-development}
     ports:
-      - "${PORT:-3000}:${PORT:-3000}"
+      - "${PORT:-8080}:${PORT:-8080}"
     volumes:
       - ./:/app

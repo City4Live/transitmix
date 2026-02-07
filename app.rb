@@ -11,7 +11,7 @@ $: << File.expand_path('../lib', __FILE__)
 
 require 'sinatra/base'
 require 'sinatra-sequel'
-require 'sinatra-assets'
+require 'vite-manifest'
 require 'grape'
 
 require 'app/routes'

@@ -22,22 +22,60 @@ With additional help from [Jason Denizac](https://github.com/jden), [Becky Boone
 
 ### Setup
 
-Transitmix is a Ruby application with a PostgreSQL database.
+Transitmix is a Ruby application with a PostgreSQL database. The frontend uses Vite for development with hot module replacement (HMR).
 
-1. [Install PostgreSQL](https://github.com/codeforamerica/howto/blob/master/PostgreSQL.md).
-2. [Install Ruby](https://github.com/codeforamerica/howto/blob/master/Ruby.md).
+#### Prerequisites
 
-Using the command line, clone Transmitmix from Github and prepare the database:
-   
+- [Docker](https://docs.docker.com/get-docker/) and Docker Compose
+- [Node.js](https://nodejs.org/) (v18+)
+
+#### Quick Start
+
+1. Clone the repository and install dependencies:
+
 ```console
 git clone https://github.com/codeforamerica/transitmix.git
 cd transitmix
 cp .env.sample .env
-bundle install
-rake db:create db:migrate
-rake db:create db:migrate DATABASE_URL=postgres://localhost/transitmix_test
-bundle exec rackup
+npm install
 ```
+
+2. Start the development environment:
+
+```console
+# Terminal 1: Start the backend (Ruby API + PostgreSQL)
+docker compose up
+
+# Terminal 2: Start the Vite dev server (frontend with HMR)
+npm run dev
+```
+
+3. Open http://localhost:3000 in your browser
+
+The Vite dev server on port 3000 proxies API requests to the Ruby backend on port 8080.
+
+#### Available Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Vite dev server with HMR |
+| `npm run build` | Build frontend for production |
+| `npm run preview` | Preview production build locally |
+| `docker compose up` | Start backend in development mode |
+| `npm run backend:prod` | Start backend in production mode |
+| `npm run test:e2e` | Run Cypress E2E tests |
+| `npm run cypress:open` | Open Cypress test runner |
+
+#### Production Build
+
+To run the app with the production frontend build:
+
+```console
+npm run build
+RACK_ENV=production docker compose up
+```
+
+Then open http://localhost:8080
 
 ### Deploying to Heroku
 

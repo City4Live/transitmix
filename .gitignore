@@ -48,6 +48,9 @@ data/
 
 node_modules/
 
+# Vite build output
+public/vite/
+
 # Cypress
 cypress/screenshots/
 cypress/videos/

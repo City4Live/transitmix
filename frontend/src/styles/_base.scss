@@ -1,0 +1,85 @@
+/* Reset box model and margins */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background: #fff;
+  color: #fff;
+  font-family: jaf-facitweb, sans-serif;
+  font-size: 15px;
+  line-height: 1;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-size: 100%;
+  font-weight: normal;
+}
+
+/* Don't show bluebox around contenteditable in WebKit */
+[contenteditable]:focus {
+  outline: 0px solid transparent;
+}
+
+[contenteditable]:hover {
+  cursor: pointer;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1; /* Base z-index for the map */
+}
+
+/* Ensure Leaflet elements respect z-index hierarchy */
+.leaflet-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 1; /* Match the map z-index */
+}
+
+/* Make sure UI elements appear above the map */
+.feedbackView,
+.homeView,
+.mapDetailsView,
+.lineDetailsView,
+.notificationView,
+.drawingInstructions {
+  position: relative;
+  z-index: 100; /* Higher than map (z-index: 1) */
+}
+
+
+.showHome, .showNearby {
+  left: 220px;
+  bottom: 0;
+  background: #000;
+  margin-top: 20px;
+  padding: 18px 24px;
+  position: absolute;
+  opacity: 0.6;
+  font-size: 14px;
+  border-left: 1px solid #4D4D4D;
+  cursor: pointer;
+  z-index: 10;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.showNearby {
+  left: 333px;
+  width: 144px;
+  &.showing {
+    opacity: 0.8;
+  }
+}

@@ -13,11 +13,8 @@ gem 'pg', '>= 1.5'
 gem 'rake'
 gem 'rubyzip'
 gem 'ruby_kml'
-gem 'sassc', '~> 2.4'
 gem 'sequel', '~> 5.70'
 gem 'sinatra', '~> 3.0'
-gem 'sprockets', '~> 4.1'
-gem 'uglifier', '~> 4.2'
 gem 'thin'
 
 group :test do
