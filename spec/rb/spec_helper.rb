@@ -1,3 +1,6 @@
+ENV['RACK_ENV'] = 'test'
+ENV['DATABASE_URL'] ||= 'postgres://postgres:postgres@postgres:5432/transitmix_test'
+
 require 'byebug'
 require 'factory_bot'
 require 'ffaker'

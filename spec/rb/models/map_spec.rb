@@ -28,6 +28,25 @@ describe Map do
     end
   end
 
+  describe 'defaults' do
+    it 'sets default values for year fields' do
+      map = create(:map)
+      map.reload
+      expect(map.weekdays_per_year).to eq 255
+      expect(map.saturdays_per_year).to eq 55
+      expect(map.sundays_per_year).to eq 55
+    end
+  end
+
+  describe 'timestamps' do
+    it 'sets created_at and updated_at on create' do
+      map = create(:map)
+      map.reload
+      expect(map.created_at).not_to be_nil
+      expect(map.updated_at).not_to be_nil
+    end
+  end
+
   describe '.remix' do
     it 'creates a copy of the map and lines' do
       map = create(:map)
@@ -52,6 +71,16 @@ describe Map do
       expect(copy.zoom_level).to eq map.zoom_level
       expect(copy.layover).to eq map.layover
       expect(copy.center).to eq map.center
+    end
+
+    it 'copies line coordinates and color' do
+      map = create(:map)
+      line = create(:line, map_id: map.id, color: 'red', speed: 15.0)
+      copy = Map.first!(id: map.id).remix
+      copied_line = copy.lines.first
+      expect(copied_line.color).to eq 'red'
+      expect(copied_line.speed).to eq 15.0
+      expect(copied_line.coordinates).to eq line.coordinates
     end
   end
 end
